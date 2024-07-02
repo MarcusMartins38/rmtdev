@@ -17,8 +17,6 @@ import { useActiveId, useJobItem, useJobItems } from "../lib/hooks";
 function App() {
   const [searchText, setSearchText] = useState("");
   const [jobItems, isLoading] = useJobItems(searchText);
-  const activeId = useActiveId();
-  const jobItem = useJobItem(activeId);
 
   return (
     <>
