@@ -51,7 +51,7 @@ export function useJobItem(id: number | null) {
       retry: false,
       enabled: !!id,
       onError: (error) => {
-        toast.error(error);
+        toast.error(error.message);
       },
     }
   );
@@ -91,7 +91,7 @@ export function useJobItems(searchText: string) {
       retry: false,
       enabled: !!searchText,
       onError: (error) => {
-        toast.error(error);
+        toast.error(error.message);
       },
     }
   );
