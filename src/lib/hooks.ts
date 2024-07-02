@@ -23,14 +23,21 @@ export function useActiveId() {
   return activeId;
 }
 
+type JobItemApiResponse = {
+  public: boolean;
+  jobItem: JobItemExpanded;
+};
+
+const fetchJobItem = async (id: number): Promise<JobItemApiResponse> => {
+  const response = await fetch(`${BASE_API_URL}/${id}`);
+  const data = await response.json();
+  return data;
+};
+
 export function useJobItem(id: number | null) {
   const { data, isLoading } = useQuery(
     ["job-item", id],
-    async () => {
-      const response = await fetch(`${BASE_API_URL}/${id}`);
-      const data = await response.json();
-      return data;
-    },
+    async () => (id ? fetchJobItem(id) : null),
     {
       staleTime: 1000 * 60 * 60,
       refetchOnWindowFocus: false,
