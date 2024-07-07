@@ -2,7 +2,7 @@ import { SortBy } from "../lib/types";
 
 type SortingControlsProps = {
   sortBy: SortBy;
-  onClick: (sortBy: string) => void;
+  onClick: (newSortBy: SortBy) => void;
 };
 
 export default function SortingControls({
@@ -30,6 +30,38 @@ export default function SortingControls({
       >
         Recent
       </button>
+
+      <SortingButton
+        onClick={() => onClick("relevant")}
+        isActive={sortBy === "relevant"}
+      >
+        Relevant
+      </SortingButton>
+      <SortingButton
+        onClick={() => onClick("recent")}
+        isActive={sortBy === "relevant"}
+      >
+        Recent
+      </SortingButton>
     </section>
+  );
+}
+
+type SortingButtonProps = {
+  children: React.ReactNode;
+  onClick: () => void;
+  isActive: boolean;
+};
+
+function SortingButton({ children, onClick, isActive }: SortingButtonProps) {
+  return (
+    <button
+      onClick={onClick}
+      className={`sorting__button sorting__button--recent ${
+        isActive === "recent" ? "sorting__button--active" : ""
+      }`}
+    >
+      {children}
+    </button>
   );
 }
