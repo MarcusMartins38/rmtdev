@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { JobItem, JobItemExpanded } from "./types";
 import { BASE_API_URL } from "./constants";
-import { useQuery } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import { handleError } from "./utils";
 import { BookmarksContext } from "../contexts/BookmarksContextProvider";
 
@@ -60,6 +60,30 @@ export function useJobItem(id: number | null) {
 
 // ====================================================
 
+export function useJobItems(ids: number[]) {
+  const results = useQueries({
+    queries: ids.map((id) => ({
+      queryKey: ["job-item", id],
+      queryFn: () => fetchJobItem(id),
+      staleTime: 1000 * 60 * 60,
+      refetchOnWindowFocus: false,
+      retry: false,
+      enabled: Boolean(id),
+      onError: handleError,
+    })),
+  });
+
+  const jobItems = results
+    .map((result) => result.data?.jobItem)
+    .filter((jobItem) => jobItem !== undefined);
+
+  const isLoading = results.some((result) => result.isLoading);
+
+  return { jobItems, isLoading };
+}
+
+// ====================================================
+
 type JobItemsApiResponse = {
   public: boolean;
   sorted: boolean;
@@ -80,7 +104,7 @@ const fetchJobItems = async (
   return data;
 };
 
-export function useJobItems(searchText: string) {
+export function useSearchQuery(searchText: string) {
   const { data, isInitialLoading } = useQuery(
     ["job-items", searchText],
     () => fetchJobItems(searchText),
@@ -123,7 +147,7 @@ export function useLocalStorage<T>(
   return [value, setValue] as const;
 }
 
-// ------------------------- Context
+// ==================================================== Context
 
 export function useBookmarkContext() {
   const context = useContext(BookmarksContext);
