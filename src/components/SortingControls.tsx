@@ -2,6 +2,7 @@ import { useJobItemsContext } from "../lib/hooks";
 
 export default function SortingControls() {
   const { sortBy, handleChangeSortBy } = useJobItemsContext();
+
   return (
     <section className="sorting">
       <i className="fa-solid fa-arrow-down-short-wide"></i>
@@ -14,7 +15,7 @@ export default function SortingControls() {
       </SortingButton>
       <SortingButton
         onClick={() => handleChangeSortBy("recent")}
-        isActive={sortBy === "relevant"}
+        isActive={sortBy === "recent"}
       >
         Recent
       </SortingButton>
@@ -33,7 +34,7 @@ function SortingButton({ children, onClick, isActive }: SortingButtonProps) {
     <button
       onClick={onClick}
       className={`sorting__button sorting__button--recent ${
-        isActive === "recent" ? "sorting__button--active" : ""
+        isActive ? "sorting__button--active" : ""
       }`}
     >
       {children}
